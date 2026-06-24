@@ -19,7 +19,78 @@ S3_OUTPUT  = 's3://lks-data-lake-tema2/athena-results/'
 # Endpoint 1: dashboard
 @app.route('/')
 def beranda():
-    return "Halo, dashboard berhasil diakses!"
+    return "<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard LKS 2026</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; bg-color: #f0f0f0; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #e0e0e0; }
+        .box { border: 1px solid #999; padding: 15px; margin-top: 15px; background: #fff; }
+        button { padding: 8px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+
+    <h1>Monitoring Transaksi - LKS CC 2026</h1>
+    <p>Provinsi Lampung</p>
+
+    <div class="box">
+        <h3>Daftar Transaksi (DynamoDB)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>User ID</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.transaction_id }}</td>
+                    <td>{{ item.user_id }}</td>
+                    <td>Rp {{ item.amount }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">Tidak ada data transaksi.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="box">
+        <h3>Menu Analitik (Amazon Athena)</h3>
+        <p>Klik tombol di bawah untuk menjalankan Query SQL di S3 via Athena:</p>
+        <form action="/run-athena" method="GET">
+            <button type="submit">Jalankan Query Athena</button>
+        </form>
+        {% if query_id %}
+        <p style="color: blue; font-family: monospace;">Query Berhasil Dikirim! ID: {{ query_id }}</p>
+        {% endif %}
+    </div>
+
+    <div class="box">
+        <h3>Analisis AI (Groq API)</h3>
+        <form action="/run-ai" method="GET">
+            <button type="submit" style="background-color: #008CBA;">Minta Analisis Llama3</button>
+        </form>
+        {% if ai_text %}
+        <p><b>Hasil Analisis:</b></p>
+        <div style="background: #eef; padding: 10px; border-left: 4px solid #008CBA;">
+            {{ ai_text }}
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>"
 
 # Endpoint 2: Semua transaksi
 @app.route('/transactions')

@@ -6,8 +6,8 @@ from groq import Groq
 app = Flask(__name__)
 
 
-dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-athena  = boto3.client('athena',   region_name='us-east-1')
+dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-1')
+athena  = boto3.client('athena',   region_name='ap-southeast-1')
 groq_client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
 
 

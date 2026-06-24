@@ -1,0 +1,12 @@
+CREATE DATABASE lks_analytics;
+
+
+CREATE EXTERNAL TABLE lks_analytics.transactions (
+  transaction_id STRING,
+  timestamp      STRING,
+  amount         DOUBLE,
+  user_id        STRING,
+  fraud_flag     BOOLEAN
+)
+ROW FORMAT SERDE 'org.openx.data.jsonserde.JsonSerDe'
+LOCATION 's3://lks-data-lake-[namakamu]/transactions/';

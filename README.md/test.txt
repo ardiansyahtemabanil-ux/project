@@ -1,0 +1,43 @@
+promp ec2:
+sudo apt update && sudo apt install -y docker.io
+sudo usermod -aG docker ubuntu
+sudo systemctl enable docker && sudo systemctl start docker
+
+
+
+Test Case 1: Kirim Transaksi Normal
+POST {{base_url}}/prod/transactions
+Headers: x-api-key: [api-key]
+Content-Type: application/json
+
+
+Body:
+{
+  "user_id": "user_001",
+  "amount": 150000,
+  "product": "Laptop",
+  "payment_method": "credit_card"
+}
+
+
+Expected: 200 OK, response berisi transaction_id
+
+Test Case 2: Trigger Fraud Alert
+POST {{base_url}}/prod/transactions
+
+
+Body:
+{
+  "user_id": "user_999",
+  "amount": 50000000,
+  "product": "Crypto",
+  "payment_method": "transfer"
+}
+
+
+Expected: 200 OK + email SNS fraud alert diterima
+
+Test Case 3: Cek Dashboard Flask
+GET http://[EC2-IP]:5000/transactions
+GET http://[EC2-IP]:5000/analytics
+GET http://[EC2-IP]:5000/ai-analysis

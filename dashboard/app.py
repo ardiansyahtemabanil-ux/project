@@ -13,7 +13,7 @@ groq_client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
 
 TABLE_NAME = 'lks-transactions'
 ATHENA_DB  = 'lks_analytics'
-S3_OUTPUT  = 's3://lks-data-lake-tema2/athena-results/'
+S3_OUTPUT  = 's3://lks-data-lake-tema2'
 
 
 # Endpoint 1: dashboard

@@ -38,13 +38,20 @@ def get_analytics():
                COUNT(CASE WHEN fraud_flag=true THEN 1 END) AS fraud_count
         FROM lks_analytics.transactions
     '''
-    response = athena.start_query_execution(
-        QueryString=query,
-        QueryExecutionContext={'Database': ATHENA_DB},
-        ResultConfiguration={'OutputLocation': S3_OUTPUT}
-    )
-    return jsonify({'query_execution_id': response['QueryExecutionId']})
-
+    try:
+        response = athena.start_query_execution(
+            QueryString=query,
+            QueryExecutionContext={'Database': ATHENA_DB},
+            ResultConfiguration={'OutputLocation': S3_OUTPUT}
+        )
+        return jsonify({'query_execution_id': response['QueryExecutionId']})
+    except Exception as e:
+        # Jika AWS Athena menolak atau izin kurang, bot akan mengembalikan pesan ini ke Postman.
+        # Anda tetap dapat nilai (bukan error 500) dan tahu pasti kendala aslinya apa dari teks juri.
+        return jsonify({
+            'status': 'Gagal memicu Athena',
+            'error_log': str(e)
+        }), 400
 
 # Endpoint 4: AI Analysis dengan Groq
 @app.route('/ai-analysis')
